@@ -1,7 +1,10 @@
 package com.example.android.popularmovies;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +14,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.GridLayout;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -89,6 +93,22 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
+    /*private class MovieClickListener implements View.OnClickListener {
+        public final ImageView mBannerImage;
+
+        public MovieClickListener(ImageView bannerImage, Movie movie) {
+            mBannerImage = bannerImage;
+        }
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+            intent.putExtra("movie", mActualMovie);
+            ActivityOptionsCompat options = ActivityOptionsCompat.
+                    makeSceneTransitionAnimation(context, mBannerImage, "profile");
+            context.startActivity(intent, options.toBundle());
+        }
+    }*/
 
     private class FetchMovieTask extends AsyncTask<URL, Void, Movie[]> {
 

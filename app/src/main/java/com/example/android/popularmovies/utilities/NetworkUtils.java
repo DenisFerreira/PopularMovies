@@ -42,7 +42,7 @@ public final class NetworkUtils {
     final static String N_PAGES = "1";
     final static String MOVIE_ID_PARAM = "movie_id";
 
-    final static String KEY = "";
+    final static String KEY = "40fc1c9cbe0336a9ac1d123908d5a1a9";
 
     ;
 

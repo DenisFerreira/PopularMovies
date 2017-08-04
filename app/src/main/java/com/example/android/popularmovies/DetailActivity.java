@@ -2,6 +2,7 @@ package com.example.android.popularmovies;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -31,7 +32,7 @@ public class DetailActivity extends AppCompatActivity {
         mTitleTextView = (TextView) findViewById(R.id.movie_title);
         mYearTextView = (TextView) findViewById(R.id.movie_year);
         mRatingTextView = (TextView) findViewById(R.id.movie_rating);
-        mPosterImageView = (ImageView) findViewById(R.id.movie_poster);
+        mPosterImageView = (ImageView) findViewById(R.id.iv_banner_main);
         mFavoriteButton = (Button) findViewById(R.id.favorite_button);
 
         if(getIntent().hasExtra("movie")) {
@@ -43,5 +44,16 @@ public class DetailActivity extends AppCompatActivity {
             mRatingTextView.setText(String.valueOf(mMovie.getVote_average())+"/10");
             Picasso.with(this).load(NetworkUtils.buildURLGetPoster(mMovie.getPoster_path())).into(mPosterImageView);
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                supportFinishAfterTransition();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
