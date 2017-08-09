@@ -15,8 +15,12 @@
  */
 package com.example.android.popularmovies.utilities;
 
+import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
+
+import com.example.android.popularmovies.BuildConfig;
+import com.example.android.popularmovies.R;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,13 +46,9 @@ public final class NetworkUtils {
     final static String N_PAGES = "1";
     final static String MOVIE_ID_PARAM = "movie_id";
 
-    final static String KEY = "40fc1c9cbe0336a9ac1d123908d5a1a9";
-
-    ;
-
-    public static URL buildUrlMostPopular() {
+    public static URL buildUrlMostPopular(Context context) {
         Uri builtUri = Uri.parse(MOST_POPULAR_URL).buildUpon()
-                .appendQueryParameter(APY_KEY_PARAM, KEY)
+                .appendQueryParameter(APY_KEY_PARAM, context.getResources().getString(R.string.THE_MOVIE_DB_API_TOKEN))
 //                .appendQueryParameter(PAGE_PARAM, N_PAGES)
                 .build();
 
@@ -64,9 +64,9 @@ public final class NetworkUtils {
         return url;
     }
 
-    public static URL buildUrlTopRated() {
+    public static URL buildUrlTopRated(Context context) {
         Uri builtUri = Uri.parse(TOP_RATED_URL).buildUpon()
-                .appendQueryParameter(APY_KEY_PARAM, KEY)
+                .appendQueryParameter(APY_KEY_PARAM, context.getResources().getString(R.string.THE_MOVIE_DB_API_TOKEN))
                 .appendQueryParameter(PAGE_PARAM, N_PAGES)
                 .build();
 
@@ -82,9 +82,9 @@ public final class NetworkUtils {
         return url;
     }
 
-    public static URL buildUrlGetMovie(int movieID) {
+    public static URL buildUrlGetMovie(int movieID, Context context) {
         Uri builtUri = Uri.parse(GET_MOVIE_URL).buildUpon()
-                .appendQueryParameter(APY_KEY_PARAM, KEY)
+                .appendQueryParameter(APY_KEY_PARAM, context.getResources().getString(R.string.THE_MOVIE_DB_API_TOKEN))
                 .appendQueryParameter(MOVIE_ID_PARAM, String.valueOf(movieID))
                 .build();
 

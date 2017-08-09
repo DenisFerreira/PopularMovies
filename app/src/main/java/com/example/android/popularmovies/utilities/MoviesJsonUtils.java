@@ -20,7 +20,7 @@ import java.util.Date;
 
 public class MoviesJsonUtils {
 
-    public static Movie[] getMoviesFromJson(Context context, String moviesResultJson) throws JSONException {
+    public static Movie[] getMoviesFromJson(String moviesResultJson) throws JSONException {
 
         final String STATUS_CODE = "status_code";
         final String OWN_RESULT = "results";

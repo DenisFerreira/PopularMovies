@@ -24,7 +24,24 @@ import com.example.android.popularmovies.utilities.NetworkUtils;
 
 import java.net.URL;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements FetchMovieTask.OnTaskCompleted {
+
+    @Override
+    public void onTaskStart() {
+        mProgressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onTaskCompleted(Movie[] result) {
+        mProgressBar.setVisibility(View.INVISIBLE);
+        if (result != null) {
+            showDataView();
+            mAdapter.setMovieData(result);
+        } else {
+            showErrorView();
+        }
+
+    }
 
     private RecyclerView mRecyclerView;
     private TextView mErrorMessageDisplay;
@@ -85,63 +102,12 @@ public class MainActivity extends AppCompatActivity {
     private void loadMovieData(int id){
         if(id == R.id.action_sort_most_popular){
             setTitle(getString(R.string.most_popular_movies));
-            new FetchMovieTask().execute(NetworkUtils.buildUrlMostPopular());
+            new FetchMovieTask(this).execute(NetworkUtils.buildUrlMostPopular(getBaseContext()));
         }
         else if(id == R.id.action_sort_top_rated){
             setTitle((getString(R.string.top_rated_movies)));
-            new FetchMovieTask().execute(NetworkUtils.buildUrlTopRated());
+            new FetchMovieTask(this).execute(NetworkUtils.buildUrlTopRated(getBaseContext()));
         }
 
-    }
-
-    /*private class MovieClickListener implements View.OnClickListener {
-        public final ImageView mBannerImage;
-
-        public MovieClickListener(ImageView bannerImage, Movie movie) {
-            mBannerImage = bannerImage;
-        }
-        @Override
-        public void onClick(View v) {
-            Intent intent = new Intent(MainActivity.this, DetailActivity.class);
-            intent.putExtra("movie", mActualMovie);
-            ActivityOptionsCompat options = ActivityOptionsCompat.
-                    makeSceneTransitionAnimation(context, mBannerImage, "profile");
-            context.startActivity(intent, options.toBundle());
-        }
-    }*/
-
-    private class FetchMovieTask extends AsyncTask<URL, Void, Movie[]> {
-
-        @Override
-        protected Movie[] doInBackground(URL... params) {
-            if(params.length == 0)
-                return null;
-            try {
-                String  response = NetworkUtils.getResponseFromHttpUrl(params[0]);
-                return MoviesJsonUtils.getMoviesFromJson(MainActivity.this, response);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            mProgressBar.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected void onPostExecute(Movie[] result) {
-            super.onPostExecute(result);
-            mProgressBar.setVisibility(View.INVISIBLE);
-            if (result != null) {
-                showDataView();
-                mAdapter.setMovieData(result);
-            } else {
-                showErrorView();
-            }
-        }
     }
 }
