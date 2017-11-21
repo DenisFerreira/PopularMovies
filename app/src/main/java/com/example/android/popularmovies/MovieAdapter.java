@@ -54,12 +54,12 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.GridViewHold
         return mMovies.length;
     }
 
-    public class GridViewHolder extends RecyclerView.ViewHolder {
+    class GridViewHolder extends RecyclerView.ViewHolder {
 
-        public final ImageView mBannerImage;
+        final ImageView mBannerImage;
         private Movie mActualMovie;
 
-        public GridViewHolder(final View itemView) {
+        GridViewHolder(final View itemView) {
             super(itemView);
             mBannerImage = (ImageView) itemView.findViewById(R.id.iv_banner_main);
             mBannerImage.setOnClickListener(new View.OnClickListener() {
@@ -75,7 +75,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.GridViewHold
             });
         }
 
-        public void setActualMovie(Movie movie) {
+        void setActualMovie(Movie movie) {
             mActualMovie = movie;
         }
     }

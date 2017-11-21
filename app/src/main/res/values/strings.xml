@@ -5,4 +5,8 @@
     <string name="sort_by_most_popular">Sort By Most Popular</string>
     <string name="most_popular_movies">Most Popular Movies</string>
     <string name="top_rated_movies">Top Rated Movies</string>
+    <string name="movie_poster_content_description">Movie Poster</string>
+    <string name="favorite_button_label">Favorite</string>
+    <string name="release_date_label">Release Date</string>
+    <string name="rating_label">Rating</string>
 </resources>

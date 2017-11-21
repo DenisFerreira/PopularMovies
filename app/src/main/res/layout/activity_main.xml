@@ -15,9 +15,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/tv_error_message"
-        android:padding="16dp"
+        android:padding="@dimen/error_message_padding"
         android:text="@string/error_message_loading"
-        android:textSize="20sp"
+        android:textSize="@dimen/error_message_size"
         android:visibility="invisible"/>
 
     <ProgressBar
