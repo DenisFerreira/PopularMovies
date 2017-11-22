@@ -39,7 +39,9 @@ public final class NetworkUtils {
     private static final String IMAGE_BASE_URL = "http://image.tmdb.org/t/p/w185//";
     private static final String MOST_POPULAR_URL = "https://api.themoviedb.org/3/movie/popular";
     private static final String TOP_RATED_URL = "https://api.themoviedb.org/3/movie/top_rated";
-    private static final String GET_MOVIE_URL = "";
+    private static final String GET_MOVIE_URL = "https://api.themoviedb.org/3/movie";
+    private static final String GET_VIDEO_URL = "videos";
+
 
     final static String APY_KEY_PARAM = "api_key";
     final static String PAGE_PARAM = "page";
@@ -130,5 +132,24 @@ public final class NetworkUtils {
         } finally {
             urlConnection.disconnect();
         }
+    }
+
+    public static URL buildUrlGetMovieTraillers(int movieID, Context context) {
+        Uri builtUri = Uri.parse(GET_MOVIE_URL).buildUpon()
+                .appendPath(String.valueOf(movieID))
+                .appendPath(GET_VIDEO_URL)
+                .appendQueryParameter(APY_KEY_PARAM, context.getResources().getString(R.string.THE_MOVIE_DB_API_TOKEN))
+                .build();
+
+        URL url = null;
+        try {
+            url = new URL(builtUri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        Log.v(TAG, "Built URI " + url);
+
+        return url;
     }
 }

@@ -9,4 +9,5 @@
     <string name="favorite_button_label">Favorite</string>
     <string name="release_date_label">Release Date</string>
     <string name="rating_label">Rating</string>
+    <string name="trailer_label">Trailers:</string>
 </resources>
