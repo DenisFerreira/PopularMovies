@@ -11,7 +11,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class MovieDbHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "movie.db";
-    private static int DATABASE_VERSION = 3;
+    private static int DATABASE_VERSION = 4;
 
     public MovieDbHelper(Context context){
         super(context,DATABASE_NAME, null, DATABASE_VERSION);
@@ -24,20 +24,19 @@ public class MovieDbHelper extends SQLiteOpenHelper {
 
                         MovieContract.MovieEntry._ID               + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
 
-                        MovieContract.MovieEntry.COLUMN_MOVIE_ID       + " INTEGER NOT NULL, "             +
-                        MovieContract.MovieEntry.COLUMN_TITLE + " TEXT NOT NULL,"                  +
+                        MovieContract.MovieEntry.COLUMN_MOVIE_ID       + " INTEGER NOT NULL, "              +
+                        MovieContract.MovieEntry.COLUMN_TITLE + " TEXT NOT NULL,"                           +
 
-                        MovieContract.MovieEntry.COLUMN_ORIGINAL_LANGUAGE   + " TEXT NOT NULL, "                    +
-                        MovieContract.MovieEntry.COLUMN_ORIGINAL_TITLE   + " TEXT NOT NULL, "                    +
+                        MovieContract.MovieEntry.COLUMN_ORIGINAL_LANGUAGE   + " TEXT, "            +
+                        MovieContract.MovieEntry.COLUMN_ORIGINAL_TITLE   + " TEXT, "               +
 
-                        MovieContract.MovieEntry.COLUMN_OVERVIEW   + " TEXT NOT NULL, "                    +
-                        MovieContract.MovieEntry.COLUMN_POPULARITY   + " REAL NOT NULL, "                    +
+                        MovieContract.MovieEntry.COLUMN_OVERVIEW   + " TEXT NOT NULL, "                     +
+                        MovieContract.MovieEntry.COLUMN_POPULARITY   + " REAL, "                   +
+                        MovieContract.MovieEntry.COLUMN_VOTE_AVERAGE + " REAL NOT NULL, "                   +
+                        MovieContract.MovieEntry.COLUMN_RELEASE_DATE    + " INTEGER NOT NULL, "             +
 
-                        MovieContract.MovieEntry.COLUMN_VOTE_AVERAGE + " REAL NOT NULL, "                    +
-                        MovieContract.MovieEntry.COLUMN_RELEASE_DATE    + " INTEGER NOT NULL, "                    +
-
-                        MovieContract.MovieEntry.COLUMN_VOTE_COUNT   + " INTEGER NOT NULL, "                    +
-                        MovieContract.MovieEntry.COLUMN_RUNTIME   + " INTEGER NOT NULL, "                    +
+                        MovieContract.MovieEntry.COLUMN_VOTE_COUNT   + " INTEGER, "                +
+                        MovieContract.MovieEntry.COLUMN_RUNTIME   + " INTEGER, "                   +
 
                         MovieContract.MovieEntry.COLUMN_POSTER_PATH + " TEXT NOT NULL, "                    +
                         " UNIQUE (" + MovieContract.MovieEntry.COLUMN_MOVIE_ID + ") ON CONFLICT REPLACE);";

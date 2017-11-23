@@ -1,22 +1,29 @@
 package com.example.android.popularmovies;
 
+import android.content.ContentValues;
+import android.net.Uri;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.text.format.DateUtils;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.android.popularmovies.data.Movie;
+import com.example.android.popularmovies.data.MovieContract;
 import com.example.android.popularmovies.data.Trailer;
+import com.example.android.popularmovies.utilities.FetchTrailerTask;
 import com.example.android.popularmovies.utilities.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class DetailActivity extends AppCompatActivity implements FetchTrailerTask.OnTaskCompleted{
 
@@ -29,6 +36,9 @@ public class DetailActivity extends AppCompatActivity implements FetchTrailerTas
     private Button mFavoriteButton;
     private TrailerAdapter mAdapter;
     private RecyclerView mRecyclerView;
+    private ContentValues values;
+
+    private static final int ID_INSERT_MOVIE_LOADER = 201;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,9 +68,28 @@ public class DetailActivity extends AppCompatActivity implements FetchTrailerTas
             mYearTextView.setText(format.format(mMovie.getRelease_date()));
             mRatingTextView.setText(String.valueOf(mMovie.getVote_average())+"/10");
             Picasso.with(this).load(NetworkUtils.buildURLGetPoster(mMovie.getPoster_path())).into(mPosterImageView);
-
             new FetchTrailerTask(this).execute(NetworkUtils.buildUrlGetMovieTraillers(mMovie.getId(), getBaseContext()));
+
+            values = new ContentValues();
+            values.put(MovieContract.MovieEntry.COLUMN_MOVIE_ID, mMovie.getId());
+            values.put(MovieContract.MovieEntry.COLUMN_OVERVIEW, mMovie.getOverview());
+            values.put(MovieContract.MovieEntry.COLUMN_TITLE, mMovie.getTitle());
+            values.put(MovieContract.MovieEntry.COLUMN_POSTER_PATH, mMovie.getPoster_path());
+            values.put(MovieContract.MovieEntry.COLUMN_RELEASE_DATE, mMovie.getRelease_date().getTime());
+            values.put(MovieContract.MovieEntry.COLUMN_VOTE_AVERAGE, mMovie.getVote_average());
+
+            mFavoriteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Uri uri = getContentResolver().insert(MovieContract.MovieEntry.CONTENT_URI, values);
+                    if(uri != null) {
+                        Toast.makeText(getBaseContext(), uri.toString(), Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
+
         }
+
     }
 
     @Override
