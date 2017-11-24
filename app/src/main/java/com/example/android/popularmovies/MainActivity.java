@@ -121,9 +121,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         else if(id == R.id.action_sort_favorite){
             loaderId = ID_LOADER_FAVORITES;
         }
-        getSupportLoaderManager().initLoader(loaderId, loaderBundle, this);
-        getSupportLoaderManager().restartLoader(loaderId, loaderBundle,
-                this);
+        getSupportLoaderManager().restartLoader(loaderId, loaderBundle, this);
 
     }
     private void updateData(Movie[] movies) {

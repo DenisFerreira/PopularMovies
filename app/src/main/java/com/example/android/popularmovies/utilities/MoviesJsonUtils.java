@@ -1,6 +1,7 @@
 package com.example.android.popularmovies.utilities;
 
 import com.example.android.popularmovies.data.Movie;
+import com.example.android.popularmovies.data.Review;
 import com.example.android.popularmovies.data.Trailer;
 
 import org.json.JSONArray;
@@ -108,5 +109,43 @@ public class MoviesJsonUtils {
         }
 
         return parsedTrailers;
+    }
+
+    public static Review[] getReviewsFromJson(String response) throws JSONException{
+        final String STATUS_CODE = "status_code";
+        final String OWN_RESULT = "results";
+
+        JSONObject reviewJson = new JSONObject(response);
+
+        Review[] parsedReviews = null;
+        if(reviewJson.has(STATUS_CODE)) {
+            int errorCode = reviewJson.getInt(STATUS_CODE);
+
+            switch (errorCode) {
+                case 7:
+                    break;
+                case 34:
+                    /* Location invalid */
+                    return null;
+                default:
+                    /* Server probably down */
+                    return null;
+            }
+        }
+
+        JSONArray jsonArray = reviewJson.getJSONArray(OWN_RESULT);
+        parsedReviews = new Review[jsonArray.length()];
+        for(int i = 0; i < jsonArray.length(); i++) {
+            JSONObject trailerObject =  jsonArray.getJSONObject(i);
+
+            Review review = new Review();
+            review.setReview_id(trailerObject.getString("review_id"));
+            review.setAuthor(trailerObject.getString("author"));
+            review.setContent(trailerObject.getString("content"));
+
+            parsedReviews[i] = review;
+        }
+
+        return parsedReviews;
     }
 }

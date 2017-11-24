@@ -10,7 +10,7 @@
     <string name="release_date_label">Release Date</string>
     <string name="rating_label">Rating</string>
     <string name="trailer_label">Trailers:</string>
-    <string name="sort_by_favorite">Sort By Most Favorites</string>
+    <string name="sort_by_favorite">Sort By Favorites</string>
     <string name="content_authority">com.example.android.popularmovies</string>
     <string name="favorite_movies">Favorite Movies</string>
 </resources>
