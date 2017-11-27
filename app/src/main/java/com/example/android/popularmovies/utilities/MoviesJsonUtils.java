@@ -139,7 +139,6 @@ public class MoviesJsonUtils {
             JSONObject trailerObject =  jsonArray.getJSONObject(i);
 
             Review review = new Review();
-            review.setReview_id(trailerObject.getString("review_id"));
             review.setAuthor(trailerObject.getString("author"));
             review.setContent(trailerObject.getString("content"));
 

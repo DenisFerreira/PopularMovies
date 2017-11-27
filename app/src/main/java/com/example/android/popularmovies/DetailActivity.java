@@ -17,7 +17,9 @@ import android.widget.Toast;
 
 import com.example.android.popularmovies.data.Movie;
 import com.example.android.popularmovies.data.MovieContract;
+import com.example.android.popularmovies.data.Review;
 import com.example.android.popularmovies.data.Trailer;
+import com.example.android.popularmovies.utilities.FetchReviewTask;
 import com.example.android.popularmovies.utilities.FetchTrailerTask;
 import com.example.android.popularmovies.utilities.NetworkUtils;
 import com.squareup.picasso.Picasso;
@@ -25,7 +27,7 @@ import com.squareup.picasso.Picasso;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class DetailActivity extends AppCompatActivity implements FetchTrailerTask.OnTaskCompleted{
+public class DetailActivity extends AppCompatActivity implements FetchTrailerTask.OnTaskCompleted, FetchReviewTask.OnTaskCompleted{
 
     private Movie mMovie;
     private TextView mTitleTextView;
@@ -35,7 +37,9 @@ public class DetailActivity extends AppCompatActivity implements FetchTrailerTas
     private ImageView mPosterImageView;
     private Button mFavoriteButton;
     private TrailerAdapter mAdapter;
+    private ReviewAdapter mReviewAdapter;
     private RecyclerView mRecyclerView;
+    private RecyclerView mReviewRecyclerView;
     private ContentValues values;
 
     private static final int ID_INSERT_MOVIE_LOADER = 201;
@@ -51,14 +55,20 @@ public class DetailActivity extends AppCompatActivity implements FetchTrailerTas
         mRatingTextView = (TextView) findViewById(R.id.movie_rating);
         mPosterImageView = (ImageView) findViewById(R.id.iv_banner_main);
         mFavoriteButton = (Button) findViewById(R.id.favorite_button);
-        mRecyclerView = (RecyclerView) findViewById(R.id.rc_trailer_grid);
 
+        mRecyclerView = (RecyclerView) findViewById(R.id.rc_trailer_grid);
         LinearLayoutManager layoutManager = new LinearLayoutManager(DetailActivity.this);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
-
         mAdapter = new TrailerAdapter();
         mRecyclerView.setAdapter(mAdapter);
+
+        mReviewRecyclerView = (RecyclerView) findViewById(R.id.rc_review_grid);
+        LinearLayoutManager anotherlayoutManager = new LinearLayoutManager(DetailActivity.this);
+        mReviewRecyclerView.setLayoutManager(anotherlayoutManager);
+        mReviewRecyclerView.setHasFixedSize(true);
+        mReviewAdapter = new ReviewAdapter();
+        mReviewRecyclerView.setAdapter(mReviewAdapter);
 
         if(getIntent().hasExtra("movie")) {
             mMovie = (Movie) getIntent().getSerializableExtra("movie");
@@ -69,7 +79,7 @@ public class DetailActivity extends AppCompatActivity implements FetchTrailerTas
             mRatingTextView.setText(String.valueOf(mMovie.getVote_average())+"/10");
             Picasso.with(this).load(NetworkUtils.buildURLGetPoster(mMovie.getPoster_path())).into(mPosterImageView);
             new FetchTrailerTask(this).execute(NetworkUtils.buildUrlGetMovieTraillers(mMovie.getId(), getBaseContext()));
-
+            new FetchReviewTask(this).execute(NetworkUtils.buildUrlGetMovieReviews(mMovie.getId(), getBaseContext()));
             values = new ContentValues();
             values.put(MovieContract.MovieEntry.COLUMN_MOVIE_ID, mMovie.getId());
             values.put(MovieContract.MovieEntry.COLUMN_OVERVIEW, mMovie.getOverview());
@@ -106,6 +116,11 @@ public class DetailActivity extends AppCompatActivity implements FetchTrailerTas
     @Override
     public void onTaskStart() {
 
+    }
+
+    @Override
+    public void onTaskCompleted(Review[] result) {
+        mReviewAdapter.setReviewData(result);
     }
 
     @Override

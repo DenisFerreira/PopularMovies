@@ -1,38 +1,48 @@
 package com.example.android.popularmovies.utilities;
 
-import android.content.Context;
 import android.os.AsyncTask;
-import android.support.v4.content.AsyncTaskLoader;
-
 import com.example.android.popularmovies.data.Review;
-import com.example.android.popularmovies.data.Trailer;
-
-import java.io.IOException;
 import java.net.URL;
 
 /**
  * Created by lsitec205.ferreira on 07/08/17.
  */
 
-public class FetchReviewTask extends AsyncTaskLoader<Review[]> {
+public class FetchReviewTask extends AsyncTask<URL, Void, Review[]> {
 
-    private URL mURL;
+    public interface OnTaskCompleted{
+        void onTaskStart();
+        void onTaskCompleted(Review[] result);
+    }
 
-    public FetchReviewTask(Context context, URL url) {
-        super(context);
-        mURL = url;
+    private FetchReviewTask.OnTaskCompleted mListener;
+    public FetchReviewTask(FetchReviewTask.OnTaskCompleted listener) {
+        mListener = listener;
     }
 
     @Override
-    public Review[] loadInBackground() {
-        String  response = null;
+    protected Review[] doInBackground(URL... params) {
+        if(params.length == 0)
+            return null;
         try {
-            response = NetworkUtils.getResponseFromHttpUrl(mURL);
-        } catch (IOException e) {
+            String  response = NetworkUtils.getResponseFromHttpUrl(params[0]);
+            return MoviesJsonUtils.getReviewsFromJson(response);
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return MoviesJsonUtils.getReviewsFromJson(response);
+
+        return null;
     }
 
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+        mListener.onTaskStart();
+    }
 
+    @Override
+    protected void onPostExecute(Review[] result) {
+        super.onPostExecute(result);
+        mListener.onTaskCompleted(result);
+    }
 }

@@ -41,6 +41,7 @@ public final class NetworkUtils {
     private static final String TOP_RATED_URL = "https://api.themoviedb.org/3/movie/top_rated";
     private static final String GET_MOVIE_URL = "https://api.themoviedb.org/3/movie";
     private static final String GET_VIDEO_URL = "videos";
+    private static final String GET_REVIEW_URL = "reviews";
 
 
     final static String APY_KEY_PARAM = "api_key";
@@ -138,6 +139,25 @@ public final class NetworkUtils {
         Uri builtUri = Uri.parse(GET_MOVIE_URL).buildUpon()
                 .appendPath(String.valueOf(movieID))
                 .appendPath(GET_VIDEO_URL)
+                .appendQueryParameter(APY_KEY_PARAM, context.getResources().getString(R.string.THE_MOVIE_DB_API_TOKEN))
+                .build();
+
+        URL url = null;
+        try {
+            url = new URL(builtUri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        Log.v(TAG, "Built URI " + url);
+
+        return url;
+    }
+
+    public static URL buildUrlGetMovieReviews(int movieID, Context context) {
+        Uri builtUri = Uri.parse(GET_MOVIE_URL).buildUpon()
+                .appendPath(String.valueOf(movieID))
+                .appendPath(GET_REVIEW_URL)
                 .appendQueryParameter(APY_KEY_PARAM, context.getResources().getString(R.string.THE_MOVIE_DB_API_TOKEN))
                 .build();
 
