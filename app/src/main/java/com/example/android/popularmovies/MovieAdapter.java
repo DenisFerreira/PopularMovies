@@ -43,7 +43,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.GridViewHold
     public void onBindViewHolder(GridViewHolder holder, int position) {
         Movie movie = mMovies[position];
         holder.setActualMovie(movie);
-        Picasso.with(mContext).load(NetworkUtils.buildURLGetPoster(movie.getPoster_path()))
+        Picasso.with(mContext).load(NetworkUtils.buildURLGetPoster(movie.getPosterPath()))
                 .placeholder(R.drawable.place_holder)
                 .into(holder.mBannerImage);
     }

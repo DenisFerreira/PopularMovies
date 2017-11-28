@@ -48,12 +48,12 @@ public class MoviesJsonUtils {
 
             Movie movie = new Movie();
             movie.setId(movieObject.getInt("id"));
-            movie.setOriginal_language(movieObject.getString("original_language"));
-            movie.setOriginal_title(movieObject.getString("original_title"));
+            movie.setOriginalLanguage(movieObject.getString("original_language"));
+            movie.setOriginalTitle(movieObject.getString("original_title"));
             movie.setOverview(movieObject.getString("overview"));
             movie.setPopularity(movieObject.getDouble("popularity"));
-            movie.setPoster_path(movieObject.getString("poster_path"));
-            movie.setVote_average(movieObject.getDouble("vote_average"));
+            movie.setPosterPath(movieObject.getString("poster_path"));
+            movie.setVoteAverage(movieObject.getDouble("vote_average"));
             movie.setTitle(movieObject.getString("title"));
 
             SimpleDateFormat format = new SimpleDateFormat("yyyy-mm-dd");
@@ -63,7 +63,7 @@ public class MoviesJsonUtils {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            movie.setRelease_date(date);
+            movie.setReleaseDate(date);
 
             parsedMovies[i] = movie;
         }

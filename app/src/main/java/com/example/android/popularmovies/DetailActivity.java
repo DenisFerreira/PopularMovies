@@ -2,12 +2,10 @@ package com.example.android.popularmovies;
 
 import android.content.ContentValues;
 import android.net.Uri;
-import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.format.DateUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -25,7 +23,6 @@ import com.example.android.popularmovies.utilities.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class DetailActivity extends AppCompatActivity implements FetchTrailerTask.OnTaskCompleted, FetchReviewTask.OnTaskCompleted{
 
@@ -75,18 +72,18 @@ public class DetailActivity extends AppCompatActivity implements FetchTrailerTas
             mOverwiewTextView.setText(mMovie.getOverview());
             mTitleTextView.setText(mMovie.getTitle());
             SimpleDateFormat format = new SimpleDateFormat("yyyy-mm-dd");
-            mYearTextView.setText(format.format(mMovie.getRelease_date()));
-            mRatingTextView.setText(String.valueOf(mMovie.getVote_average())+"/10");
-            Picasso.with(this).load(NetworkUtils.buildURLGetPoster(mMovie.getPoster_path())).into(mPosterImageView);
+            mYearTextView.setText(format.format(mMovie.getReleaseDate()));
+            mRatingTextView.setText(String.valueOf(mMovie.getVoteAverage())+"/10");
+            Picasso.with(this).load(NetworkUtils.buildURLGetPoster(mMovie.getPosterPath())).into(mPosterImageView);
             new FetchTrailerTask(this).execute(NetworkUtils.buildUrlGetMovieTraillers(mMovie.getId(), getBaseContext()));
             new FetchReviewTask(this).execute(NetworkUtils.buildUrlGetMovieReviews(mMovie.getId(), getBaseContext()));
             values = new ContentValues();
             values.put(MovieContract.MovieEntry.COLUMN_MOVIE_ID, mMovie.getId());
             values.put(MovieContract.MovieEntry.COLUMN_OVERVIEW, mMovie.getOverview());
             values.put(MovieContract.MovieEntry.COLUMN_TITLE, mMovie.getTitle());
-            values.put(MovieContract.MovieEntry.COLUMN_POSTER_PATH, mMovie.getPoster_path());
-            values.put(MovieContract.MovieEntry.COLUMN_RELEASE_DATE, mMovie.getRelease_date().getTime());
-            values.put(MovieContract.MovieEntry.COLUMN_VOTE_AVERAGE, mMovie.getVote_average());
+            values.put(MovieContract.MovieEntry.COLUMN_POSTER_PATH, mMovie.getPosterPath());
+            values.put(MovieContract.MovieEntry.COLUMN_RELEASE_DATE, mMovie.getReleaseDate().getTime());
+            values.put(MovieContract.MovieEntry.COLUMN_VOTE_AVERAGE, mMovie.getVoteAverage());
 
             mFavoriteButton.setOnClickListener(new View.OnClickListener() {
                 @Override

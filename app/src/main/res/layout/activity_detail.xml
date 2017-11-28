@@ -46,7 +46,6 @@
 
         <ImageView
             android:id="@+id/iv_banner_main"
-            android:transitionName="profile"
             android:layout_width="177dp"
             android:layout_height="236dp"
             android:layout_marginEnd="8dp"

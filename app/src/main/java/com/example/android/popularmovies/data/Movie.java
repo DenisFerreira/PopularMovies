@@ -8,24 +8,24 @@ import java.util.Date;
  */
 
 public class Movie implements Serializable {
-    private int vote_count;
+    private int voteCount;
     private int id;
-    private double vote_average;
+    private double voteAverage;
     private String title;
     private double popularity;
-    private String poster_path;
-    private String original_language;
-    private String original_title;
+    private String posterPath;
+    private String originalLanguage;
+    private String originalTitle;
     private String overview;
-    private Date release_date;
+    private Date releaseDate;
     private int runtime;
 
-    public int getVote_count() {
-        return vote_count;
+    public int getVoteCount() {
+        return voteCount;
     }
 
-    public void setVote_count(int vote_count) {
-        this.vote_count = vote_count;
+    public void setVoteCount(int voteCount) {
+        this.voteCount = voteCount;
     }
 
     public int getId() {
@@ -36,12 +36,12 @@ public class Movie implements Serializable {
         this.id = id;
     }
 
-    public double getVote_average() {
-        return vote_average;
+    public double getVoteAverage() {
+        return voteAverage;
     }
 
-    public void setVote_average(double vote_average) {
-        this.vote_average = vote_average;
+    public void setVoteAverage(double voteAverage) {
+        this.voteAverage = voteAverage;
     }
 
     public String getTitle() {
@@ -60,28 +60,28 @@ public class Movie implements Serializable {
         this.popularity = popularity;
     }
 
-    public String getPoster_path() {
-        return poster_path;
+    public String getPosterPath() {
+        return posterPath;
     }
 
-    public void setPoster_path(String poster_path) {
-        this.poster_path = poster_path;
+    public void setPosterPath(String posterPath) {
+        this.posterPath = posterPath;
     }
 
-    public String getOriginal_language() {
-        return original_language;
+    public String getOriginalLanguage() {
+        return originalLanguage;
     }
 
-    public void setOriginal_language(String original_language) {
-        this.original_language = original_language;
+    public void setOriginalLanguage(String originalLanguage) {
+        this.originalLanguage = originalLanguage;
     }
 
-    public String getOriginal_title() {
-        return original_title;
+    public String getOriginalTitle() {
+        return originalTitle;
     }
 
-    public void setOriginal_title(String original_title) {
-        this.original_title = original_title;
+    public void setOriginalTitle(String originalTitle) {
+        this.originalTitle = originalTitle;
     }
 
     public String getOverview() {
@@ -92,12 +92,12 @@ public class Movie implements Serializable {
         this.overview = overview;
     }
 
-    public Date getRelease_date() {
-        return release_date;
+    public Date getReleaseDate() {
+        return releaseDate;
     }
 
-    public void setRelease_date(Date release_date) {
-        this.release_date = release_date;
+    public void setReleaseDate(Date releaseDate) {
+        this.releaseDate = releaseDate;
     }
 
     public int getRuntime() {

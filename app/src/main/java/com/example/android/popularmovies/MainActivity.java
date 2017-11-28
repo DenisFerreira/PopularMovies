@@ -3,6 +3,9 @@ package com.example.android.popularmovies;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.os.PersistableBundle;
+import android.preference.PreferenceManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -29,6 +32,8 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks {
 
+    private static final String SAVED_LAYOUT_MANAGER = "saved_layout_manager";
+    private Parcelable layoutManagerSavedState;
     private RecyclerView mRecyclerView;
     private TextView mErrorMessageDisplay;
     private ProgressBar mProgressBar;
@@ -73,6 +78,24 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         mAdapter = new MovieAdapter();
         mRecyclerView.setAdapter(mAdapter);
         loadMovieData(R.id.action_sort_most_popular);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(SAVED_LAYOUT_MANAGER, mRecyclerView.getLayoutManager().onSaveInstanceState());
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        layoutManagerSavedState = savedInstanceState.getParcelable(SAVED_LAYOUT_MANAGER);
+    }
+
+    private void restoreLayoutManagerPosition() {
+        if (layoutManagerSavedState != null) {
+            mRecyclerView.getLayoutManager().onRestoreInstanceState(layoutManagerSavedState);
+        }
     }
 
     private int numberOfColumns() {
@@ -129,6 +152,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         mProgressBar.setVisibility(View.INVISIBLE);
         mAdapter.setMovieData(movies);
         mAdapter.notifyDataSetChanged();
+        restoreLayoutManagerPosition();
     }
 
     @Override
@@ -181,10 +205,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                         Movie movie = new Movie();
                         movie.setId(cursor.getInt(INDEX_TMDB_MOVIE_ID));
                         movie.setTitle(cursor.getString(INDEX_TMDB_TITLE));
-                        movie.setPoster_path(cursor.getString(INDEX_TMDB_POSTER_PATH));
-                        movie.setRelease_date(new Date(cursor.getLong
+                        movie.setPosterPath(cursor.getString(INDEX_TMDB_POSTER_PATH));
+                        movie.setReleaseDate(new Date(cursor.getLong
                                 (INDEX_TMDB_RELEASE_DATE)));
-                        movie.setVote_average(cursor.getDouble(INDEX_TMDB_VOTE_AVERAGE));
+                        movie.setVoteAverage(cursor.getDouble(INDEX_TMDB_VOTE_AVERAGE));
                         movie.setOverview(cursor.getString(INDEX_TMDB_OVERVIEW));
                         movies.add(movie);
                     }
