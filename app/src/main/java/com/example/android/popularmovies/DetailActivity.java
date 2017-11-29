@@ -69,6 +69,7 @@ public class DetailActivity extends AppCompatActivity implements FetchTrailerTas
 
         if(getIntent().hasExtra("movie")) {
             mMovie = (Movie) getIntent().getSerializableExtra("movie");
+            setTitle(getString(R.string.details)) ;
             mOverwiewTextView.setText(mMovie.getOverview());
             mTitleTextView.setText(mMovie.getTitle());
             SimpleDateFormat format = new SimpleDateFormat("yyyy-mm-dd");
@@ -109,6 +110,8 @@ public class DetailActivity extends AppCompatActivity implements FetchTrailerTas
         }
         return super.onOptionsItemSelected(item);
     }
+
+
 
     @Override
     public void onTaskStart() {

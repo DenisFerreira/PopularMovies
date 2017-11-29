@@ -22,6 +22,20 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.GridViewHold
 
     private Movie[] mMovies;
     private Context mContext;
+    private MovieAdapterClickListener mListener;
+
+
+    public interface MovieAdapterClickListener {
+        void onMovieItemClick(View view, int position);
+    }
+
+    public Movie getItem(int id) {
+        return mMovies == null ? null : mMovies[id];
+    }
+
+    MovieAdapter(MovieAdapterClickListener listener){
+        mListener = listener;
+    }
 
     public void setMovieData(Movie[] movies) {
         mMovies = movies;
@@ -65,12 +79,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.GridViewHold
             mBannerImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Context context = v.getContext();
-                    Intent intent = new Intent(context, DetailActivity.class);
-                    intent.putExtra("movie", mActualMovie);
-                    ActivityOptionsCompat options = ActivityOptionsCompat.
-                            makeSceneTransitionAnimation((Activity) context, mBannerImage, "profile");
-                    context.startActivity(intent, options.toBundle());
+                    mListener.onMovieItemClick(itemView, getAdapterPosition());
                 }
             });
         }

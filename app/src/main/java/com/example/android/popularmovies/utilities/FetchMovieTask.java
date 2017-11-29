@@ -14,6 +14,7 @@ import java.net.URL;
 public class FetchMovieTask extends AsyncTaskLoader<Movie[]> {
 
     private URL mURL;
+    private Movie[] mLastMoviesResult;
 
     public FetchMovieTask(Context context, URL url) {
         super(context);
@@ -33,12 +34,34 @@ public class FetchMovieTask extends AsyncTaskLoader<Movie[]> {
 
     @Override
     public void deliverResult(Movie[] json) {
+        mLastMoviesResult = json;
         super.deliverResult(json);
     }
 
 
     @Override
     protected void onStartLoading() {
-        forceLoad();
+        /* If no arguments were passed, we don't have a query to perform.
+        Simply return. */
+        if (mURL == null) {
+            return;
+        }
+
+        /*
+         * When we initially begin loading in the background, we want to
+         * display the
+         * loading indicator to the user
+         */
+
+        /*
+         * If we already have cached results, just deliver them now. If we
+         * don't have any
+         * cached results, force a load.
+         */
+        if (mLastMoviesResult != null) {
+            deliverResult(mLastMoviesResult);
+        } else {
+            forceLoad();
+        }
     }
 }

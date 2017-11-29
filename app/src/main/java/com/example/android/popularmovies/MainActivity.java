@@ -1,11 +1,16 @@
 package com.example.android.popularmovies;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.os.PersistableBundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -30,7 +35,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks {
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks, MovieAdapter.MovieAdapterClickListener {
 
     private static final String SAVED_LAYOUT_MANAGER = "saved_layout_manager";
     private Parcelable layoutManagerSavedState;
@@ -42,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private static final int ID_LOADER_MAIN = 101;
     private static final int ID_LOADER_FAVORITES = 102;
 
+    private static int mActualDisplayType;
     private static final String EXTRA_DISPLAY_TYPE = "display_type";
     private static final int MOST_POPULAR_DISPLAY_TYPE = 33;
     private static final int TOP_RATED_DISPLAY_TYPE = 34;
@@ -75,21 +81,31 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
 
-        mAdapter = new MovieAdapter();
+        mAdapter = new MovieAdapter(this);
         mRecyclerView.setAdapter(mAdapter);
-        loadMovieData(R.id.action_sort_most_popular);
+
+
+        if(savedInstanceState != null ){
+            layoutManagerSavedState = savedInstanceState.getParcelable(SAVED_LAYOUT_MANAGER);
+            mActualDisplayType = savedInstanceState.getInt(EXTRA_DISPLAY_TYPE);
+        }else {
+            mActualDisplayType = MOST_POPULAR_DISPLAY_TYPE;
+        }
+        loadMovieData();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        loadMovieData();
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
+        layoutManagerSavedState = mRecyclerView.getLayoutManager().onSaveInstanceState();
+        outState.putParcelable(SAVED_LAYOUT_MANAGER, layoutManagerSavedState);
+        outState.putInt(EXTRA_DISPLAY_TYPE, mActualDisplayType);
         super.onSaveInstanceState(outState);
-        outState.putParcelable(SAVED_LAYOUT_MANAGER, mRecyclerView.getLayoutManager().onSaveInstanceState());
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        layoutManagerSavedState = savedInstanceState.getParcelable(SAVED_LAYOUT_MANAGER);
     }
 
     private void restoreLayoutManagerPosition() {
@@ -128,25 +144,51 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        loadMovieData(id);
+        if(id == R.id.action_sort_most_popular) {
+            mActualDisplayType = MOST_POPULAR_DISPLAY_TYPE;
+        }
+
+        else if(id == R.id.action_sort_top_rated)
+            mActualDisplayType =  TOP_RATED_DISPLAY_TYPE;
+
+        else if(id == R.id.action_sort_favorite)
+            mActualDisplayType = FAVORITE_DISPLAY_TYPE;
+        mRecyclerView.getLayoutManager().scrollToPosition(0);
+        loadMovieData();
         return super.onOptionsItemSelected(item);
     }
 
-    private void loadMovieData(int id){
+    private void loadMovieData(){
+        mRecyclerView.setVisibility(View.INVISIBLE);
+        mProgressBar.setVisibility(View.VISIBLE);
         Bundle loaderBundle = new Bundle();
-        int loaderId = ID_LOADER_MAIN;
-        if(id == R.id.action_sort_most_popular){
-            loaderBundle.putInt(EXTRA_DISPLAY_TYPE, MOST_POPULAR_DISPLAY_TYPE);
-        }
-        else if(id == R.id.action_sort_top_rated){
-            loaderBundle.putInt(EXTRA_DISPLAY_TYPE, TOP_RATED_DISPLAY_TYPE);
-        }
-        else if(id == R.id.action_sort_favorite){
-            loaderId = ID_LOADER_FAVORITES;
-        }
-        getSupportLoaderManager().restartLoader(loaderId, loaderBundle, this);
+        loaderBundle.putInt(EXTRA_DISPLAY_TYPE, mActualDisplayType);
+        switch (mActualDisplayType) {
+            case MOST_POPULAR_DISPLAY_TYPE:
+            case TOP_RATED_DISPLAY_TYPE:
+                Loader mainLoader = getSupportLoaderManager().getLoader(ID_LOADER_MAIN);
+                if (mainLoader == null) {
+                    getSupportLoaderManager().initLoader(ID_LOADER_MAIN, loaderBundle,
+                            this);
+                } else
+                    getSupportLoaderManager().restartLoader(ID_LOADER_MAIN, loaderBundle,
+                            this);
+                break;
 
+            case FAVORITE_DISPLAY_TYPE:
+                Loader favoritesLoader = getSupportLoaderManager().getLoader
+                        (ID_LOADER_FAVORITES);
+                if (favoritesLoader == null) {
+                    getSupportLoaderManager().initLoader(ID_LOADER_FAVORITES, loaderBundle, this);
+                } else {
+                    getSupportLoaderManager().restartLoader(ID_LOADER_FAVORITES, loaderBundle,
+                            this);
+                }
+                break;
+        }
     }
+
+
     private void updateData(Movie[] movies) {
         showDataView();
         mProgressBar.setVisibility(View.INVISIBLE);
@@ -159,13 +201,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     public Loader onCreateLoader(int id, Bundle args) {
         switch (id) {
             case ID_LOADER_MAIN:
-                final int displayType = args.getInt(EXTRA_DISPLAY_TYPE);
                 URL url_display = null;
+                final int displayType = args.getInt(EXTRA_DISPLAY_TYPE);
                 switch (displayType) {
                     case MOST_POPULAR_DISPLAY_TYPE:
-                            setTitle(getString(R.string.most_popular_movies)) ;
+                        setTitle(getString(R.string.most_popular_movies));
                         url_display = NetworkUtils.buildUrlMostPopular(getBaseContext());
-
                         break;
                     case TOP_RATED_DISPLAY_TYPE:
                         setTitle((getString(R.string.top_rated_movies)));
@@ -197,8 +238,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 }
                 break;
             case ID_LOADER_FAVORITES:
-                Cursor cursor = (Cursor) data;
-                if (cursor != null) {
+                if(data!=null) {
+                    Cursor cursor = (Cursor) data;
                     List<Movie> movies = new ArrayList<>();
                     for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor
                             .moveToNext()) {
@@ -212,6 +253,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                         movie.setOverview(cursor.getString(INDEX_TMDB_OVERVIEW));
                         movies.add(movie);
                     }
+                    cursor.close();
                     Movie[] result = new Movie[movies.size()];
                     int i = 0;
                     for(Movie m : movies) {
@@ -220,7 +262,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                     }
                     updateData(result);
 
-                    cursor.close();
+
                 } else
                     showErrorView();
                 break;
@@ -234,5 +276,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public void onLoaderReset(Loader loader) {
 
+    }
+
+    @Override
+    public void onMovieItemClick(View view, int position) {
+        Context context = getBaseContext();
+        Intent intent = new Intent(context, DetailActivity.class);
+        intent.putExtra("movie", mAdapter.getItem(position));
+        startActivity(intent);
     }
 }

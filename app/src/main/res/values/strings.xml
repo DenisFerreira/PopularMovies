@@ -14,4 +14,5 @@
     <string name="content_authority">com.example.android.popularmovies</string>
     <string name="favorite_movies">Favorite Movies</string>
     <string name="review_label">Reviews:</string>
+    <string name="details">Details</string>
 </resources>
