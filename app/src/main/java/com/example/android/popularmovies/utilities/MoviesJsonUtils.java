@@ -101,7 +101,6 @@ public class MoviesJsonUtils {
 
             Trailer trailer = new Trailer();
             trailer.setKey(trailerObject.getString("key"));
-            trailer.setType(trailerObject.getString("type"));
             trailer.setName(trailerObject.getString("name"));
             trailer.setSite(trailerObject.getString("site"));
 

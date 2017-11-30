@@ -3,17 +3,14 @@ package com.example.android.popularmovies.data;
 import android.content.Intent;
 import android.net.Uri;
 
-import java.net.MalformedURLException;
-
 /**
  * Created by lsitec205.ferreira on 22/11/17.
  */
 
 public class Trailer {
     private String key;
-    private String Name;
+    private String name;
     private String site;
-    private String type;
 
 
     public void setKey(String key) {
@@ -21,18 +18,15 @@ public class Trailer {
     }
 
     public void setName(String name) {
-        Name = name;
+        this.name = name;
     }
 
     public void setSite(String site) {
         this.site = site;
     }
 
-    public void setType(String type) {
-        this.type = type;
-    }
 
-    public Intent getIntent(){
+    public Intent getYoutubeIntent(){
         if((site == "YouTube")||(key != null)) {
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + key));
             intent.putExtra("VIDEO_ID", key);
@@ -41,7 +35,17 @@ public class Trailer {
         throw new UnsupportedOperationException("Unknown uri: " + key);
     }
 
+    public Intent getWebIntent(){
+        if((site == "YouTube")||(key != null)) {
+            Intent webIntent = new Intent(Intent.ACTION_VIEW,
+                    Uri.parse("http://www.youtube.com/watch?v=" + key));
+            webIntent.putExtra("VIDEO_ID", key);
+            return webIntent;
+        }
+        throw new UnsupportedOperationException("Unknown uri: " + key);
+    }
+
     public String getName() {
-        return Name;
+        return name;
     }
 }

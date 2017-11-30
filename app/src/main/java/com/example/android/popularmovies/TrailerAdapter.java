@@ -1,5 +1,6 @@
 package com.example.android.popularmovies;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
@@ -39,7 +40,8 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.GridView
     @Override
     public void onBindViewHolder(GridViewHolder holder, int position) {
         Trailer trailer = mTrailers[position];
-        holder.mYoutubeIntent = trailer.getIntent();
+        holder.mYoutubeIntent = trailer.getYoutubeIntent();
+        holder.mWebIntent = trailer.getWebIntent();
         holder.mTrailerName.setText(trailer.getName());
     }
 
@@ -54,6 +56,7 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.GridView
         final ImageView mPlayVideoImage;
         public final TextView mTrailerName;
         public Intent mYoutubeIntent;
+        public Intent mWebIntent;
 
         GridViewHolder(final View itemView) {
             super(itemView);
@@ -63,7 +66,11 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.GridView
                 @Override
                 public void onClick(View v) {
                     Context context = v.getContext();
-                    context.startActivity(mYoutubeIntent);
+                    try {
+                        context.startActivity(mYoutubeIntent);
+                    }catch (ActivityNotFoundException ex) {
+                        context.startActivity(mWebIntent);
+                    }
                 }
             });
 

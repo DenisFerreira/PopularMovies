@@ -1,5 +1,8 @@
 package com.example.android.popularmovies.data;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -7,7 +10,7 @@ import java.util.Date;
  * Created by lsitec205.ferreira on 03/08/17.
  */
 
-public class Movie implements Serializable {
+public class Movie implements Parcelable {
     private int voteCount;
     private int id;
     private double voteAverage;
@@ -19,6 +22,36 @@ public class Movie implements Serializable {
     private String overview;
     private Date releaseDate;
     private int runtime;
+
+    public Movie(Parcel in) {
+        voteCount = in.readInt();
+        id = in.readInt();
+        voteAverage = in.readDouble();
+        title = in.readString();
+        popularity = in.readDouble();
+        posterPath = in.readString();
+        originalLanguage = in.readString();
+        originalTitle = in.readString();
+        overview = in.readString();
+        runtime = in.readInt();
+        releaseDate = new Date(in.readLong());
+    }
+
+    public static final Creator<Movie> CREATOR = new Creator<Movie>() {
+        @Override
+        public Movie createFromParcel(Parcel in) {
+            return new Movie(in);
+        }
+
+        @Override
+        public Movie[] newArray(int size) {
+            return new Movie[size];
+        }
+    };
+
+    public Movie() {
+
+    }
 
     public int getVoteCount() {
         return voteCount;
@@ -106,5 +139,26 @@ public class Movie implements Serializable {
 
     public void setRuntime(int runtime) {
         this.runtime = runtime;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
+        dest.writeInt(voteCount);
+        dest.writeInt(id);
+        dest.writeDouble(voteAverage);
+        dest.writeString(title);
+        dest.writeDouble(popularity);
+        dest.writeString(posterPath);
+        dest.writeString(originalLanguage);
+        dest.writeString(originalTitle);
+        dest.writeString(overview);
+        dest.writeInt(runtime);
+        dest.writeLong(releaseDate.getTime());
     }
 }

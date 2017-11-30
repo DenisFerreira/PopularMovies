@@ -39,7 +39,7 @@ public class DetailActivity extends AppCompatActivity implements FetchTrailerTas
     private RecyclerView mReviewRecyclerView;
     private ContentValues values;
 
-    private static final int ID_INSERT_MOVIE_LOADER = 201;
+    private static final String MOVIE_EXTRA = "movie";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,8 +67,8 @@ public class DetailActivity extends AppCompatActivity implements FetchTrailerTas
         mReviewAdapter = new ReviewAdapter();
         mReviewRecyclerView.setAdapter(mReviewAdapter);
 
-        if(getIntent().hasExtra("movie")) {
-            mMovie = (Movie) getIntent().getSerializableExtra("movie");
+        if(getIntent().hasExtra(MOVIE_EXTRA)) {
+            mMovie =  getIntent().getParcelableExtra(MOVIE_EXTRA);
             setTitle(getString(R.string.details)) ;
             mOverwiewTextView.setText(mMovie.getOverview());
             mTitleTextView.setText(mMovie.getTitle());
