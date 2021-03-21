@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Popular Movies</string>
+    <string name="error_message_loading">An error has occurred. Please try again</string>
+    <string name="sort_by_top_rated">Sort By Top Rated</string>
+    <string name="sort_by_most_popular">Sort By Most Popular</string>
+    <string name="most_popular_movies">Most Popular Movies</string>
+    <string name="top_rated_movies">Top Rated Movies</string>
+    <string name="movie_poster_content_description">Movie Poster</string>
+    <string name="favorite_button_label">Favorite</string>
+    <string name="release_date_label">Release Date</string>
+    <string name="rating_label">Rating</string>
+    <string name="trailer_label">Trailers:</string>
+    <string name="sort_by_favorite">Sort By Favorites</string>
+    <string name="content_authority">com.example.android.popularmovies</string>
+    <string name="favorite_movies">Favorite Movies</string>
+    <string name="review_label">Reviews:</string>
+    <string name="details">Details</string>
+</resources>
